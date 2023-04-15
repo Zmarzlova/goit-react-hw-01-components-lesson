@@ -25,4 +25,7 @@ export const Badg = styled.span`
 padding: 8px 12px;
 border-radius: ${p => p.theme.radii.small};
 border: 1px solid ${p => p.theme.colors.black};
+background-color: ${props => {
+    return props.active ? props.theme.colors.accent : props.theme.colors.white;
+}}
 `

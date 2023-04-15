@@ -26,9 +26,9 @@ export const RecipeCard = ({ item: { image, name, time, servings, calories, diff
         <div>
             <h3>Difficulty</h3>
             <BadgList >
-                <Badg>Easy</Badg>
-                <Badg>Medium</Badg>
-                 <Badg>Hard</Badg>
+                <Badg active={difficulty === 'easy'}>Easy</Badg>
+                <Badg active={difficulty === 'medium'}>Medium</Badg>
+                <Badg active={difficulty === 'hard'}>Hard</Badg>
             </BadgList>
         </div>
     </div>
