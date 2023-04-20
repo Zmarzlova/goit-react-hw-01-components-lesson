@@ -1,11 +1,40 @@
+import { RecipeDifficulty } from 'constants';
 import PropTypes from 'prop-types'
+import { Component } from 'react';
 import { AiOutlineClockCircle, AiOutlinePieChart, AiOutlineBarChart } from "react-icons/ai";
-import { Badg, BadgList, InfoBlock, Name, RecipeInfo } from './RecipeCard.styled';
+import { HiTrash, HiZoomIn} from "react-icons/hi";
+import { Actions, Badg, BadgList, Container, Image, InfoBlock, Meta, Name, RecipeInfo } from './RecipeCard.styled';
+import { ImageModal } from 'components/imageModal/imageModal';
 
 
-export const RecipeCard = ({ item: { image, name, time, servings, calories, difficulty }, }) => {
-    return ( <div>
-        <img src={image} alt={name} width="240" />
+
+export class RecipeCard extends Component {
+    static propTypes = {
+    onDelete: PropTypes.func.isRequired,
+    item: PropTypes.shape({
+        image: PropTypes.string.isRequired, name: PropTypes.string.isRequired,
+        time: PropTypes.number.isRequired, servings: PropTypes.number.isRequired, calories: PropTypes.number.isRequired,
+        difficulty: PropTypes.oneOf(['easy', 'medium', 'hard']).isRequired,
+    }).isRequired,
+}
+    state = {
+        selectedImg: null,
+    }
+
+    setSelectedImg = () => {
+        this.setState({ selectedImg: this.props.item.image})
+    }
+
+    closeModal = () => {
+        this.setState({ selectedImg: null}) 
+    }
+    render() {
+        const { selectedImg } = this.state
+        const { item: { id, image, name, time, servings, calories, difficulty }, onDelete,} = this.props
+        return (
+        <Container>
+            <Image src={image} alt={name} width="240" />
+    <Meta>
         <Name>{name}</Name>
 
         <RecipeInfo>
@@ -23,22 +52,21 @@ export const RecipeCard = ({ item: { image, name, time, servings, calories, diff
             </InfoBlock>  
         </RecipeInfo>
 
-        <div>
-            <h3>Difficulty</h3>
-            <BadgList >
-                <Badg active={difficulty === 'easy'}>Easy</Badg>
-                <Badg active={difficulty === 'medium'}>Medium</Badg>
-                <Badg active={difficulty === 'hard'}>Hard</Badg>
-            </BadgList>
-        </div>
-    </div>
+        <BadgList >
+                <Badg active={difficulty === RecipeDifficulty.easy} type={RecipeDifficulty.easy}>Easy</Badg>
+                <Badg active={difficulty === RecipeDifficulty.medium} type={RecipeDifficulty.medium}>Medium</Badg>
+                <Badg active={difficulty === RecipeDifficulty.hard} type={RecipeDifficulty.hard}>Hard</Badg>
+        </BadgList>
+                
+        <Actions>
+        <button aria-label='Delete' onClick={() => onDelete(id)}><HiTrash />
+        </button>
+        <button aria-label='Zoom' onClick={this.setSelectedImg}><HiZoomIn />
+        </button>
+        </Actions>
+    </Meta>
+                <ImageModal isOpen={selectedImg !== null} onClose={ this.closeModal} image={selectedImg} />
+    </Container>
     )
-}
-
-RecipeCard.propTypes = {
-    item: PropTypes.shape({
-        image: PropTypes.string.isRequired, name: PropTypes.string.isRequired,
-        time: PropTypes.number.isRequired, servings: PropTypes.number.isRequired, calories: PropTypes.number.isRequired,
-        difficulty: PropTypes.oneOf(['easy', 'medium', 'hard']).isRequired,
-    }).isRequired,
-}
+    }
+} 

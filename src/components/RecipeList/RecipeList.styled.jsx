@@ -5,3 +5,6 @@ display: flex;
 flex-wrap: wrap;
 gap: 8px;
 `
+
+export const ListItem = styled.li`
+`
